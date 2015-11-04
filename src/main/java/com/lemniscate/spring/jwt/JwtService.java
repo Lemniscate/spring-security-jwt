@@ -22,7 +22,7 @@ public interface JwtService<E extends JwtUserDetails> extends AuthenticationProv
 
     String encodeDetails(E details);
 
-    JwtUserDetails parseDetails(String json);
+    E parseDetails(String json);
 
     class JwtServiceImpl<E extends JwtUserDetails> implements JwtService<E> {
 

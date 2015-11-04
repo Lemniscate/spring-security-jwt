@@ -6,8 +6,7 @@
 
     <groupId>com.lemniscate</groupId>
     <artifactId>spring-security-jwt</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-
+    <version>0.0.2-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.2.5.RELEASE</spring.version>
@@ -50,4 +49,29 @@
             <version>1.0.3.RELEASE</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
