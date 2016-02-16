@@ -6,7 +6,7 @@
 
     <groupId>com.lemniscate</groupId>
     <artifactId>spring-security-jwt</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.2.5.RELEASE</spring.version>

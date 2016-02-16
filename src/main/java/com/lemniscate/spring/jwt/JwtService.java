@@ -39,7 +39,7 @@ public interface JwtService<E extends JwtUserDetails> extends AuthenticationProv
         private MacSigner hmac;
 
         @Autowired(required = false)
-        private JwtUserDetails.Marshaller marshaller;
+        private JwtUserDetails.Marshaller<E> marshaller;
 
         public JwtServiceImpl(Class<E> detailsClass){
             this.detailsClass = detailsClass;

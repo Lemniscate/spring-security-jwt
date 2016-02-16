@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Created by dave on 10/30/15.
  */
-public class JacksonJwtUserDetailsMarshaller implements JwtUserDetails.Marshaller{
+public class JacksonJwtUserDetailsMarshaller <E extends JwtUserDetails> implements JwtUserDetails.Marshaller<E> {
 
     @Autowired
     public ObjectMapper objectMapper;
 
     @Override
-    public <E extends JwtUserDetails> E deserialize(String validatedJson, Class<E> targetType) throws Exception{
+    public E deserialize(String validatedJson, Class<E> targetType) throws Exception{
         E details = objectMapper
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .readValue(validatedJson, targetType);
@@ -21,7 +21,7 @@ public class JacksonJwtUserDetailsMarshaller implements JwtUserDetails.Marshalle
     }
 
     @Override
-    public <E extends JwtUserDetails> String serialize(E details) throws Exception{
+    public String serialize(E details) throws Exception{
         return objectMapper.writeValueAsString(details);
     }
 }

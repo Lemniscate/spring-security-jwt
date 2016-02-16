@@ -11,8 +11,8 @@ public interface JwtUserDetails extends UserDetails {
     void setExpiresMillis(long secondsFromEpoch);
 
 
-    interface Marshaller {
-        <E extends JwtUserDetails> E deserialize(String validatedJson, Class<E> targetType) throws Exception;
-        <E extends JwtUserDetails> String serialize(E details) throws Exception;
+    interface Marshaller<E extends JwtUserDetails> {
+        E deserialize(String validatedJson, Class<E> targetType) throws Exception;
+        String serialize(E details) throws Exception;
     }
 }
