@@ -105,7 +105,7 @@ public interface JwtService<E extends JwtUserDetails> extends AuthenticationProv
                 String encoded = jwt.getEncoded();
                 return encoded;
             } catch (Exception e) {
-                throw new RuntimeException("Failed encoding JWT details");
+                throw new RuntimeException("Failed encoding JWT details", e);
             }
         }
 
