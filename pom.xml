@@ -4,7 +4,7 @@
 
     <groupId>com.lemniscate</groupId>
     <artifactId>spring-security-jwt</artifactId>
-    <version>0.0.4.RELEASE</version>
+    <version>0.0.5-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.2.5.RELEASE</spring.version>
@@ -116,6 +116,6 @@
         <url>https://github.com/lemniscate/spring-security-jwt</url>
         <connection>scm:git:git://github.com/lemniscate/spring-security-jwt.git</connection>
         <developerConnection>scm:git:git@github.com:lemniscate/spring-security-jwt.git</developerConnection>
-      <tag>spring-security-jwt-0.0.4.RELEASE</tag>
+      <tag>HEAD</tag>
   </scm>
 </project>
