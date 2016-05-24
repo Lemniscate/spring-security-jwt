@@ -4,7 +4,7 @@
 
     <groupId>com.lemniscate</groupId>
     <artifactId>spring-security-jwt</artifactId>
-    <version>0.0.5.BUILD-SNAPSHOT</version>
+    <version>0.0.6.BUILD-SNAPSHOT</version>
 
     <properties>
         <spring.version>3.2.5.RELEASE</spring.version>
@@ -54,6 +54,13 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <configuration>
+                    <tag>${project.version}</tag>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -116,6 +123,6 @@
         <url>https://github.com/lemniscate/spring-security-jwt</url>
         <connection>scm:git:git://github.com/lemniscate/spring-security-jwt.git</connection>
         <developerConnection>scm:git:git@github.com:lemniscate/spring-security-jwt.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 </project>
