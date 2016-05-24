@@ -65,20 +65,22 @@ public interface JwtService<E extends JwtUserDetails> extends AuthenticationProv
             try {
                 return doAuthenticate(auth);
             }catch(AuthenticationException e){
-                Authentication ctxa = SecurityContextHolder.getContext().getAuthentication();
-                if( ctxa == null ){
-                    ctxa = auth;
-                }
-                eventPublisher.publishAuthenticationFailure(e, ctxa);
+                publishEventIfPossible(e, auth);
                 throw e;
             }catch(RuntimeException e){
                 AuthenticationServiceException ex = new AuthenticationServiceException("An unexpected error occurred while processing a JWT session", e);
+                publishEventIfPossible(ex, auth);
+                throw ex;
+            }
+        }
+
+        private void publishEventIfPossible(AuthenticationException e, Authentication auth){
+            if( eventPublisher != null ) {
                 Authentication ctxa = SecurityContextHolder.getContext().getAuthentication();
-                if( ctxa == null ){
+                if (ctxa == null) {
                     ctxa = auth;
                 }
-                eventPublisher.publishAuthenticationFailure(ex, ctxa);
-                throw ex;
+                eventPublisher.publishAuthenticationFailure(e, ctxa);
             }
         }
 
