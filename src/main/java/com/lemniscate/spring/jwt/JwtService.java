@@ -4,9 +4,12 @@ import org.joda.time.DateTime;
 import org.joda.time.Minutes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.MacSigner;
@@ -41,6 +44,10 @@ public interface JwtService<E extends JwtUserDetails> extends AuthenticationProv
         @Autowired(required = false)
         private JwtUserDetails.Marshaller<E> marshaller;
 
+        @Autowired(required = false)
+        private AuthenticationEventPublisher eventPublisher;
+
+
         public JwtServiceImpl(Class<E> detailsClass){
             this.detailsClass = detailsClass;
         }
@@ -51,8 +58,32 @@ public interface JwtService<E extends JwtUserDetails> extends AuthenticationProv
             hmac = new MacSigner(jwtPhrase);
         }
 
+
+
         @Override
-        public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        public final Authentication authenticate(Authentication auth) throws AuthenticationException {
+            try {
+                return doAuthenticate(auth);
+            }catch(AuthenticationException e){
+                Authentication ctxa = SecurityContextHolder.getContext().getAuthentication();
+                if( ctxa == null ){
+                    ctxa = auth;
+                }
+                eventPublisher.publishAuthenticationFailure(e, ctxa);
+                throw e;
+            }catch(RuntimeException e){
+                AuthenticationServiceException ex = new AuthenticationServiceException("An unexpected error occurred while processing a JWT session", e);
+                Authentication ctxa = SecurityContextHolder.getContext().getAuthentication();
+                if( ctxa == null ){
+                    ctxa = auth;
+                }
+                eventPublisher.publishAuthenticationFailure(ex, ctxa);
+                throw ex;
+            }
+        }
+
+
+        protected Authentication doAuthenticate(Authentication authentication) throws AuthenticationException {
             PreAuthenticatedAuthenticationToken token = (PreAuthenticatedAuthenticationToken) authentication;
             token.setAuthenticated(true);
 
@@ -89,7 +120,7 @@ public interface JwtService<E extends JwtUserDetails> extends AuthenticationProv
             if( jwt.equals(JwtTokenAuthenticationFilter.NO_ACCESS) ) {
                 return null;
             }else if (!jwt.startsWith("Bearer ")) {
-                throw new IllegalStateException("Invalid Authorization token. Format should be: Bearer [Token]");
+                throw new AuthenticationServiceException("Invalid Authorization token. Format should be: Bearer [Token]");
             }
 
             jwt = jwt.substring("Bearer ".length());
@@ -105,7 +136,7 @@ public interface JwtService<E extends JwtUserDetails> extends AuthenticationProv
                 String encoded = jwt.getEncoded();
                 return encoded;
             } catch (Exception e) {
-                throw new RuntimeException("Failed encoding JWT details", e);
+                throw new AuthenticationServiceException("Failed encoding JWT details", e);
             }
         }
 
